@@ -24,3 +24,10 @@ gradle clean && gradle test
 
 # Watch VNC
 http://localhost:8081
+
+# .env file
+Inside 'tests/' folder, write to a .env file:
+```text
+USERNAME=<your Wikipedia username>
+PASSWORD=<your Wikipedia password>
+```

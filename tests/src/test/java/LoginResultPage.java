@@ -1,16 +1,18 @@
 import org.openqa.selenium.*;
 
 public class LoginResultPage extends PageBase {
-    private By LogoutButtonElementLocator = By.className("button");
-    
+    private By userSpanElementLocator = By.xpath("//li[@id='pt-userpage-2']//span");
+
     public LoginResultPage(WebDriver driver) {
         super(driver);
     }
 
-    public MainPage clickLogoutButton() {
-        WebElement loginButtonElement = waitAndReturnElement(LogoutButtonElementLocator);
-        loginButtonElement.click();
+    public boolean userSpanElementExists() {
+        return elementExists(userSpanElementLocator);
+    }
 
-        return new MainPage(this.driver);
+    public String getUserSpanText() {
+        WebElement userSpanElement = waitAndReturnElement(userSpanElementLocator);
+        return userSpanElement.getText();
     }
 }
