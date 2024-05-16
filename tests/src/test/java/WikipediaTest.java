@@ -5,6 +5,11 @@ import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import io.github.cdimascio.dotenv.Dotenv;
+import pages.LoggedOutMainPage;
+import pages.LoginResultPage;
+import pages.LogoutPage;
+import pages.SearchResultArticlePage;
+import pages.WikipediaLoginPage;
 
 import static org.junit.Assert.assertTrue;
 

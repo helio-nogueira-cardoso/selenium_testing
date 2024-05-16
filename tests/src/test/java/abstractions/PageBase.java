@@ -1,5 +1,9 @@
+package abstractions;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.WebDriverWait;
+
+import pages.SearchResultArticlePage;
+
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
 /*

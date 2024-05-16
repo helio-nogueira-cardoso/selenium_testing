@@ -1,4 +1,8 @@
+package pages;
 import org.openqa.selenium.*;
+
+import abstractions.PageBase;
+import interfaces.UnambiguousPage;
 
 public class LoggedOutMainPage extends PageBase<LoggedOutMainPage> implements UnambiguousPage<LoggedOutMainPage> {
     private By linkToLoginPageLocator = By.xpath("//div[@id='p-vector-user-menu-overflow']//span[contains(text(), 'Log in')]//ancestor::a[1]");

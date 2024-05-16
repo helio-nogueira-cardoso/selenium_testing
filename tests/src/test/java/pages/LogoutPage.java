@@ -1,4 +1,8 @@
+package pages;
 import org.openqa.selenium.*;
+
+import abstractions.PageBase;
+import interfaces.UnambiguousPage;
 
 public class LogoutPage extends PageBase<LogoutPage> implements UnambiguousPage<LogoutPage> {
     private By mainPageLink = By.xpath("//p[@id='mw-returnto']//a");

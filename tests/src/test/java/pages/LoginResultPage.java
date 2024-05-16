@@ -1,4 +1,7 @@
+package pages;
 import org.openqa.selenium.*;
+
+import abstractions.PageBase;
 
 public class LoginResultPage extends PageBase<LoginResultPage> {
     private By userSpanElementLocator = By.xpath("//li[@id='pt-userpage-2']//span");
