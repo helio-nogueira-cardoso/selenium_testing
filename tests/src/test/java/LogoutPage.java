@@ -5,6 +5,7 @@ public class LogoutPage extends PageBase<LogoutPage> implements UnambiguousPage<
 
     public LogoutPage(WebDriver driver) {
         super(driver);
+        this.ensure();
     }
 
     public LoggedOutMainPage clickMainPageLink() {

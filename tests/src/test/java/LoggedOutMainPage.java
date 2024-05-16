@@ -7,6 +7,7 @@ public class LoggedOutMainPage extends PageBase<LoggedOutMainPage> implements Un
     public LoggedOutMainPage(WebDriver driver) {
         super(driver);
         this.driver.get("https://en.wikipedia.org/wiki/Main_Page");
+        this.ensure();
     }
 
     public WikipediaLoginPage clickLinkToLoginPage() {

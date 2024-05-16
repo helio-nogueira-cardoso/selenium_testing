@@ -2,10 +2,15 @@ import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
-public class PageBase<T> {    
+/*
+ * T: same class that extends
+ */
+public abstract class PageBase<T> {    
     protected WebDriver driver;
     private WebDriverWait wait;
     private By bodyElementLocator = By.tagName("body");
+    private By searchBarInputElementLocator = By.xpath("//form[@id='searchform']//input[contains(@class, 'cdx-text-input')]");
+    private By searchButtonElementLocator = By.xpath("//form[@id='searchform']//button[contains(@class, 'cdx-button')]");
 
     public PageBase(WebDriver driver) {
         this.driver = driver;
@@ -38,6 +43,16 @@ public class PageBase<T> {
     public String getBodyText() {
         return waitAndReturnElement(bodyElementLocator).getText();
     }    
+
+    public SearchResultArticlePage search(String searchtext) {
+        WebElement searchBarInputElement = waitAndReturnElement(searchBarInputElementLocator);
+        searchBarInputElement.clear();
+        searchBarInputElement.sendKeys(searchtext);
+        
+        waitAndReturnElement(searchButtonElementLocator).click();
+
+        return new SearchResultArticlePage(this.driver);
+    }
 
     @SuppressWarnings("unchecked")
     public T hold() {

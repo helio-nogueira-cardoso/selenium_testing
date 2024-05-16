@@ -7,6 +7,7 @@ public class WikipediaLoginPage extends PageBase<WikipediaLoginPage> implements 
     
     public WikipediaLoginPage(WebDriver driver) {
         super(driver);
+        this.ensure();
     }
 
     public WikipediaLoginPage writeToUsernameInput(String username) {
