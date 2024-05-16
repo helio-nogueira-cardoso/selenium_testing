@@ -12,7 +12,7 @@ public class LogoutPage extends PageBase<LogoutPage> implements UnambiguousPage<
         return new LoggedOutMainPage(this.driver);
     }
 
-    public LogoutPage amIhere() {
+    public LogoutPage ensure() {
         waitElement(mainPageLink);
         return this;
     }

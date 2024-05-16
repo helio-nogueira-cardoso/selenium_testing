@@ -32,7 +32,7 @@ public class WikipediaTest {
 
         LoggedOutMainPage loggedOutMainPage = new LoggedOutMainPage(this.driver);
 
-        assertTrue(loggedOutMainPage.amIhere().loginLinkExists());
+        assertTrue(loggedOutMainPage.ensure().getWelcomeTitleMessage().contains("Welcome to Wikipedia"));
 
         loginPage = loggedOutMainPage
             .clickLinkToLoginPage();
@@ -59,11 +59,11 @@ public class WikipediaTest {
             .openUserMenu()
             .logout();
 
-        assertTrue(logoutPage.amIhere().getBodyText().contains("You are now logged out."));
+        assertTrue(logoutPage.ensure().getBodyText().contains("You are now logged out."));
 
         loggedOutMainPage = logoutPage.clickMainPageLink();
 
-        assertTrue(loggedOutMainPage.amIhere().loginLinkExists());
+        assertTrue(loggedOutMainPage.ensure().getWelcomeTitleMessage().contains("Welcome to Wikipedia"));
     }  
 
     @After

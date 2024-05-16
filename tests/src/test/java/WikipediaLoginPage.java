@@ -29,7 +29,7 @@ public class WikipediaLoginPage extends PageBase<WikipediaLoginPage> implements 
         return new LoginResultPage(this.driver);
     }
 
-    public WikipediaLoginPage amIhere() {
+    public WikipediaLoginPage ensure() {
         waitElement(loginButtonElementLocator);
         return this;
     }
