@@ -28,14 +28,18 @@ public class WikipediaTest {
     public void validAndInvalidLoginTest() {
         WikipediaLoginPage loginPage;
         LoginResultPage loginResultPage;
+        LogoutPage logoutPage;
 
-        MainPage mainPage = new MainPage(this.driver);;
+        LoggedOutMainPage loggedOutMainPage = new LoggedOutMainPage(this.driver);
 
-        loginPage = mainPage
+        assertTrue(loggedOutMainPage.amIhere().loginLinkExists());
+
+        loginPage = loggedOutMainPage
             .clickLinkToLoginPage();
         loginResultPage = loginPage
             .writeToUsernameInput("WRONGUSERNAME")
             .writeToPasswordInput("WRONGPASSWORD")
+            .hold() // You might have to solve Recaptcha
             .clickLoginButton();
 
         assertTrue(loginResultPage.getBodyText().contains("Incorrect username or password entered"));
@@ -43,12 +47,23 @@ public class WikipediaTest {
         loginResultPage = loginPage
             .writeToUsernameInput(this.correctUsername)
             .writeToPasswordInput(this.correctPassword)
+            .hold() // You might have to solve Recaptcha
             .clickLoginButton();
         
         assertTrue(
             loginResultPage.userSpanElementExists() &&
             loginResultPage.getUserSpanText().contains(this.correctUsername)
         );
+
+        logoutPage = loginResultPage
+            .openUserMenu()
+            .logout();
+
+        assertTrue(logoutPage.amIhere().getBodyText().contains("You are now logged out."));
+
+        loggedOutMainPage = logoutPage.clickMainPageLink();
+
+        assertTrue(loggedOutMainPage.amIhere().loginLinkExists());
     }  
 
     @After

@@ -1,6 +1,6 @@
 import org.openqa.selenium.*;
 
-public class WikipediaLoginPage extends PageBase {
+public class WikipediaLoginPage extends PageBase<WikipediaLoginPage> implements UnambiguousPage<WikipediaLoginPage> {
     private By usernameInputElementLocator = By.id("wpName1");
     private By passwordInputElementLocator = By.id("wpPassword1");
     private By loginButtonElementLocator = By.id("wpLoginAttempt");
@@ -24,9 +24,13 @@ public class WikipediaLoginPage extends PageBase {
     }
 
     public LoginResultPage clickLoginButton() {
-        WebElement loginButton = waitAndReturnElement(loginButtonElementLocator);
-        loginButton.click();
+        waitAndReturnElement(loginButtonElementLocator).click();
 
         return new LoginResultPage(this.driver);
+    }
+
+    public WikipediaLoginPage amIhere() {
+        waitElement(loginButtonElementLocator);
+        return this;
     }
 }

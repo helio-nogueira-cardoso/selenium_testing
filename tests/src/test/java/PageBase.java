@@ -2,7 +2,7 @@ import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
-public class PageBase {    
+public class PageBase<T> {    
     protected WebDriver driver;
     private WebDriverWait wait;
     private By bodyElementLocator = By.tagName("body");
@@ -26,24 +26,26 @@ public class PageBase {
         return true;
     }
 
-    protected WebElement waitAndReturnElement(By locator) {
+    protected void waitElement(By locator) {
         this.wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
+    } 
+
+    protected WebElement waitAndReturnElement(By locator) {
+        waitElement(locator);
         return this.driver.findElement(locator);
     }
 
-    protected void waitElement(By locator) {
-        this.wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
-    }
-
     public String getBodyText() {
-        WebElement bodyElement = waitAndReturnElement(bodyElementLocator);
-        return bodyElement.getText();
+        return waitAndReturnElement(bodyElementLocator).getText();
     }    
 
-    public void hold() {
+    @SuppressWarnings("unchecked")
+    public T hold() {
         try {
             wait.until(ExpectedConditions.invisibilityOfElementLocated(bodyElementLocator));
         } catch (TimeoutException e) {
         }
+
+        return (T) this;
     }
 }
