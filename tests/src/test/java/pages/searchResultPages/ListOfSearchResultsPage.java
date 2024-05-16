@@ -1,4 +1,4 @@
-package pages.searchResults;
+package pages.searchResultPages;
 
 import org.openqa.selenium.*;
 
@@ -7,10 +7,15 @@ import interfaces.UnambiguousPageInterface;
 
 public class ListOfSearchResultsPage extends PageBase<ListOfSearchResultsPage> implements UnambiguousPageInterface<ListOfSearchResultsPage> {
     private By resultlinksElementsFilter = By.xpath("//div[@class='mw-search-result-heading']//a");
+    private By listFooterTextElementLocator = By.xpath("//div[@id='mw-content-text']//p[contains(@class, 'mw-search-createlink')]//i");
     
     public ListOfSearchResultsPage(WebDriver driver) {
         super(driver);
         this.ensure();
+    }
+
+    public String getListFooterText() {
+        return waitAndReturnElement(listFooterTextElementLocator).getText();
     }
 
     public ArticlePage goToFirstArticle() {

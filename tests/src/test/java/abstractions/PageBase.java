@@ -4,9 +4,9 @@ import java.util.List;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import pages.searchResults.ArticlePage;
-import pages.searchResults.ListOfSearchResultsPage;
-import pages.searchResults.SearchResultPageHandler;
+import pages.searchResultPages.ArticlePage;
+import pages.searchResultPages.ListOfSearchResultsPage;
+import pages.searchResultPages.SearchResultPageHandler;
 
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
@@ -22,7 +22,7 @@ public abstract class PageBase<T> {
 
     public PageBase(WebDriver driver) {
         this.driver = driver;
-        this.wait = new WebDriverWait(this.driver, 5);
+        this.wait = new WebDriverWait(this.driver, 7);
     }
     
     protected boolean elementExists(By locator) {
@@ -37,6 +37,10 @@ public abstract class PageBase<T> {
         }
 
         return true;
+    }
+
+    public void pressBrowserBackButton() {
+        this.driver.navigate().back();
     }
 
     protected void waitElement(By locator) {

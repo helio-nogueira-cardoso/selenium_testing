@@ -1,4 +1,4 @@
-package pages.searchResults;
+package pages.searchResultPages;
 import org.openqa.selenium.*;
 
 import abstractions.PageBase;

@@ -2,7 +2,10 @@ import pages.LoggedOutMainPage;
 import pages.LoginResultPage;
 import pages.LogoutPage;
 import pages.WikipediaLoginPage;
-import pages.searchResults.ArticlePage;
+import pages.searchResultPages.ArticlePage;
+import pages.searchResultPages.ListOfSearchResultsPage;
+import pages.searchResultPages.SearchResultPageHandler;
+import utils.RandomStringGenerator;
 
 import java.net.URL;
 import org.openqa.selenium.*;
@@ -12,8 +15,10 @@ import io.github.cdimascio.dotenv.Dotenv;
 import java.net.MalformedURLException;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvFileSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 
@@ -29,6 +34,7 @@ public class WikipediaTest {
     @BeforeAll
     public void setup() throws MalformedURLException {
         ChromeOptions options = new ChromeOptions();
+        options.addArguments("--incognito", "--delete-cookies");
         this.driver = new RemoteWebDriver(new URL("http://selenium:4444/wd/hub"), options);
         this.driver.manage().window().maximize();
 
@@ -81,6 +87,7 @@ public class WikipediaTest {
     
     @ParameterizedTest
     @CsvFileSource(resources = "/searchTestData.csv", numLinesToSkip = 1)
+    @DisplayName("Searching: '{0}'; Expected Article Title: '{1}'")
     public void searchTest(String searchText, String expectedArticleTitle) {
         ArticlePage article;
         LoggedOutMainPage loggedOutMainPage = new LoggedOutMainPage(this.driver);
@@ -88,6 +95,34 @@ public class WikipediaTest {
         article = loggedOutMainPage.seachAndGoToFirstResult(searchText);
 
         assertTrue(article.getArticleTitle().equals(expectedArticleTitle));
+    }
+
+    @Test
+    public void browserBackButtonTest() {
+        LoggedOutMainPage loggedOutMainPage = new LoggedOutMainPage(this.driver);
+        loggedOutMainPage.clickLinkToLoginPage().pressBrowserBackButton();
+        loggedOutMainPage.ensure();
+        assertTrue(loggedOutMainPage.getWelcomeTitleMessage().contains("Welcome to Wikipedia"));
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = {18, 19, 20})
+    public void testSearchingLongRandomStrings(int length) {
+        String randomsearchtext = RandomStringGenerator.generateRandomString(length);
+
+        LoggedOutMainPage loggedOutMainPage = new LoggedOutMainPage(driver);
+        SearchResultPageHandler searchResultPageHandler = loggedOutMainPage.search(randomsearchtext);
+
+        assertTrue(searchResultPageHandler.isListOfSearchResults());
+
+        ListOfSearchResultsPage listOfSearchResultsPage = searchResultPageHandler.listOfSearchResultsPage();
+
+        assertTrue(
+            listOfSearchResultsPage
+                .getListFooterText()
+                .toLowerCase()
+                .contains(String.format("the page \"%s\" does not exist.", randomsearchtext))
+        );
     }
 
     @AfterAll
