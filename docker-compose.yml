@@ -22,7 +22,7 @@ services:
       - selenium
 
   selenium:
-    image: selenium/standalone-chrome-debug:3.141.59
+    image: selenium/standalone-chrome-debug:3.14.0-krypton
     environment:
       - VNC_NO_PASSWORD=1
       - SCREEN_WIDTH=1800
