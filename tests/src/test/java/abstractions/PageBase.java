@@ -1,8 +1,12 @@
 package abstractions;
+
+import java.util.List;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import pages.SearchResultArticlePage;
+import pages.searchResults.ArticlePage;
+import pages.searchResults.ListOfSearchResultsPage;
+import pages.searchResults.SearchResultPageHandler;
 
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
@@ -18,7 +22,7 @@ public abstract class PageBase<T> {
 
     public PageBase(WebDriver driver) {
         this.driver = driver;
-        this.wait = new WebDriverWait(this.driver, 10);
+        this.wait = new WebDriverWait(this.driver, 5);
     }
     
     protected boolean elementExists(By locator) {
@@ -44,18 +48,34 @@ public abstract class PageBase<T> {
         return this.driver.findElement(locator);
     }
 
+    protected List<WebElement> waitAndReturnElements(By filter) {
+        wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(filter));
+        return this.driver.findElements(filter);
+    }
+
     public String getBodyText() {
         return waitAndReturnElement(bodyElementLocator).getText();
     }    
 
-    public SearchResultArticlePage search(String searchtext) {
+    public SearchResultPageHandler search(String searchtext) {
         WebElement searchBarInputElement = waitAndReturnElement(searchBarInputElementLocator);
         searchBarInputElement.clear();
         searchBarInputElement.sendKeys(searchtext);
         
         waitAndReturnElement(searchButtonElementLocator).click();
 
-        return new SearchResultArticlePage(this.driver);
+        return new SearchResultPageHandler(this.driver);
+    }
+
+    public ArticlePage seachAndGoToFirstResult(String searchtext) {
+        SearchResultPageHandler searchResultPageHandler = this.search(searchtext);
+
+        if (searchResultPageHandler.isListOfSearchResults()) {
+            ListOfSearchResultsPage listOfSearchResultsPage = searchResultPageHandler.listOfSearchResultsPage();
+            return listOfSearchResultsPage.goToFirstArticle();
+        } 
+        
+        return searchResultPageHandler.articlePage();
     }
 
     @SuppressWarnings("unchecked")

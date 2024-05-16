@@ -2,9 +2,9 @@ package pages;
 import org.openqa.selenium.*;
 
 import abstractions.PageBase;
-import interfaces.UnambiguousPage;
+import interfaces.UnambiguousPageInterface;
 
-public class WikipediaLoginPage extends PageBase<WikipediaLoginPage> implements UnambiguousPage<WikipediaLoginPage> {
+public class WikipediaLoginPage extends PageBase<WikipediaLoginPage> implements UnambiguousPageInterface<WikipediaLoginPage> {
     private By usernameInputElementLocator = By.id("wpName1");
     private By passwordInputElementLocator = By.id("wpPassword1");
     private By loginButtonElementLocator = By.id("wpLoginAttempt");

@@ -2,9 +2,9 @@ package pages;
 import org.openqa.selenium.*;
 
 import abstractions.PageBase;
-import interfaces.UnambiguousPage;
+import interfaces.UnambiguousPageInterface;
 
-public class LoggedOutMainPage extends PageBase<LoggedOutMainPage> implements UnambiguousPage<LoggedOutMainPage> {
+public class LoggedOutMainPage extends PageBase<LoggedOutMainPage> implements UnambiguousPageInterface<LoggedOutMainPage> {
     private By linkToLoginPageLocator = By.xpath("//div[@id='p-vector-user-menu-overflow']//span[contains(text(), 'Log in')]//ancestor::a[1]");
     private By welcomeTitleSpan = By.id("Welcome_to_Wikipedia");
 

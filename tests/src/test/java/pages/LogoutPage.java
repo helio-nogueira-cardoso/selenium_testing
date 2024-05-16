@@ -2,9 +2,9 @@ package pages;
 import org.openqa.selenium.*;
 
 import abstractions.PageBase;
-import interfaces.UnambiguousPage;
+import interfaces.UnambiguousPageInterface;
 
-public class LogoutPage extends PageBase<LogoutPage> implements UnambiguousPage<LogoutPage> {
+public class LogoutPage extends PageBase<LogoutPage> implements UnambiguousPageInterface<LogoutPage> {
     private By mainPageLink = By.xpath("//p[@id='mw-returnto']//a");
 
     public LogoutPage(WebDriver driver) {
