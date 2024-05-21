@@ -43,6 +43,10 @@ public abstract class PageBase<T> {
         this.driver.navigate().back();
     }
 
+    public String getPageTitle() {
+        return this.driver.getTitle();
+    }
+
     protected void waitElement(By locator) {
         this.wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
     } 

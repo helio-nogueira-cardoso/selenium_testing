@@ -83,6 +83,7 @@ public class WikipediaTest {
         loggedOutMainPage = logoutPage.clickMainPageLink();
 
         assertTrue(loggedOutMainPage.getWelcomeTitleMessage().contains("Welcome to Wikipedia"));
+        assertTrue(loggedOutMainPage.getPageTitle().contains("Wikipedia, the free encyclopedia"));
     }  
     
     @ParameterizedTest
