@@ -1,10 +1,13 @@
 import pages.LoggedOutMainPage;
 import pages.LoginResultPage;
 import pages.LogoutPage;
+import pages.PreferencesPage;
 import pages.WikipediaLoginPage;
 import pages.searchResultPages.ArticlePage;
 import pages.searchResultPages.ListOfSearchResultsPage;
 import pages.searchResultPages.SearchResultPageHandler;
+import utils.DateFormatType;
+import utils.DateValidator;
 import utils.RandomStringGenerator;
 
 import java.net.URL;
@@ -32,7 +35,7 @@ public class WikipediaTest {
     private String correctPassword;
     
     @BeforeAll
-    public void setup() throws MalformedURLException {
+    public void setup() throws MalformedURLException, InterruptedException {
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--incognito", "--delete-cookies");
         this.driver = new RemoteWebDriver(new URL("http://selenium:4444/wd/hub"), options);
@@ -42,7 +45,7 @@ public class WikipediaTest {
         correctUsername = dotenv.get("USERNAME");
         correctPassword = dotenv.get("PASSWORD");
     }
-
+    
     @Test
     public void validAndInvalidLoginTest() {
         WikipediaLoginPage loginPage;
@@ -56,17 +59,19 @@ public class WikipediaTest {
         loginPage = loggedOutMainPage
             .clickLinkToLoginPage();
         loginResultPage = loginPage
+            .clickCorner()
             .writeToUsernameInput("WRONGUSERNAME")
             .writeToPasswordInput("WRONGPASSWORD")
-            .hold() // You might have to solve Recaptcha
+            .hold(8) // You might have to solve Recaptcha
             .clickLoginButton();
 
         assertTrue(loginResultPage.getBodyText().contains("Incorrect username or password entered"));
 
         loginResultPage = loginPage
+            .clickCorner()
             .writeToUsernameInput(this.correctUsername)
             .writeToPasswordInput(this.correctPassword)
-            .hold() // You might have to solve Recaptcha
+            .hold(8) // You might have to solve Recaptcha
             .clickLoginButton();
         
         assertTrue(
@@ -124,6 +129,51 @@ public class WikipediaTest {
                 .toLowerCase()
                 .contains(String.format("the page \"%s\" does not exist.", randomsearchtext))
         );
+    }
+
+    @Test
+    public void userApperancePreferencesFormTest() {
+        DateFormatType[] dateFormatTypeWrapper = new DateFormatType[]{DateFormatType.NO_PREFERENCE};
+        WikipediaLoginPage loginPage;
+        LoginResultPage loginResultPage;
+        PreferencesPage preferencesPage;
+        
+        LoggedOutMainPage loggedOutMainPage = new LoggedOutMainPage(this.driver);
+
+        loginPage = loggedOutMainPage
+            .clickLinkToLoginPage();
+        loginResultPage = loginPage
+            .clickCorner()
+            .writeToUsernameInput(this.correctUsername)
+            .writeToPasswordInput(this.correctPassword)
+            .clickLoginButton();
+
+        preferencesPage = loginResultPage
+            .openUserMenu()
+            .goToPreferences();
+
+        ArticlePage article = preferencesPage
+            .selectApperancePreferencesTab()
+            .changeDateFormatPreference(dateFormatTypeWrapper)
+            .savePreferences()
+            .search("Hungary")
+            .articlePage();
+
+        String lastModificationDate = DateValidator.extractDate(
+            article.getLastModificationMessage()
+        );
+
+        if (dateFormatTypeWrapper[0] == DateFormatType.DAY_MONTH_YEAR) {
+            assertTrue(DateValidator.isDataInFormatDayMonthYear(lastModificationDate));
+        } else if (dateFormatTypeWrapper[0] == DateFormatType.MONTH_DAY_YEAR) {
+            assertTrue(DateValidator.isDataInFormatMonthDayYear(lastModificationDate));
+        } else {
+            assertTrue(false, "Preferences not changed");
+        }
+
+        loginResultPage
+            .openUserMenu()
+            .logout();
     }
 
     @AfterAll

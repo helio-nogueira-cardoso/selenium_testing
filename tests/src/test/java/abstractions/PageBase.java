@@ -2,6 +2,7 @@ package abstractions;
 
 import java.util.List;
 import org.openqa.selenium.*;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import pages.searchResultPages.ArticlePage;
@@ -22,7 +23,7 @@ public abstract class PageBase<T> {
 
     public PageBase(WebDriver driver) {
         this.driver = driver;
-        this.wait = new WebDriverWait(this.driver, 7);
+        this.wait = new WebDriverWait(this.driver, 5);
     }
     
     protected boolean elementExists(By locator) {
@@ -57,6 +58,7 @@ public abstract class PageBase<T> {
     }
 
     protected List<WebElement> waitAndReturnElements(By filter) {
+        this.hold(3);
         wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(filter));
         return this.driver.findElements(filter);
     }
@@ -86,12 +88,37 @@ public abstract class PageBase<T> {
         return searchResultPageHandler.articlePage();
     }
 
+    public void clickById(String id) {
+        ((JavascriptExecutor) this.driver).executeScript("document.getElementById(\"" + id + "\").click();");
+    }
+
+    public boolean checkIfIsSelectedById(String id) {
+        Object isSelected = ((JavascriptExecutor) this.driver).executeScript(
+            "return document.getElementById(\"" + id + "\").checked;"
+        );
+    
+        if (isSelected instanceof Boolean) {
+            return (Boolean) isSelected;
+        } else {
+            return false;
+        }
+    }
+
     @SuppressWarnings("unchecked")
-    public T hold() {
+    public T hold(int seconds) {
         try {
-            wait.until(ExpectedConditions.invisibilityOfElementLocated(bodyElementLocator));
+            (new WebDriverWait(this.driver, seconds)).until(ExpectedConditions.invisibilityOfElementLocated(bodyElementLocator));
         } catch (TimeoutException e) {
         }
+
+        return (T) this;
+    }
+
+    @SuppressWarnings("unchecked")
+    public T clickCorner() {
+        Actions builder = new Actions(this.driver);
+        builder.moveByOffset(1, 100).click().perform();
+        this.hold(3);
 
         return (T) this;
     }
